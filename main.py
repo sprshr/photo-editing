@@ -99,6 +99,14 @@ def keepOnlyOne(image, color):
 
 #Returns a new image that is the greyscale version of image.
 def greyScale(image):
+	arr = np.array(image)
+	for row in range(arr.shape[0]):
+		for col in range(arr.shape[1]):
+			r,g,b = arr[row][col]
+			avg = r * 0.2126 + g * 0.7152 + b * 0.0722
+			avg = int(avg)
+			arr[row][col] = [avg, avg, avg]
+	image = Image.fromarray(arr)
 	return image
 
 #Returns a new image that is the negative version of image (all values are subtracted from 255 so that light becomes dark, red becomes cyan, etc.).
@@ -147,11 +155,11 @@ img3 = Image.open('thumbs up.png')
 # remove(img, GREEN).save('no green.jpg')
 # remove(img, BLUE).save('no blue.jpg')
 
-#keepOnlyOne(img, RED).save('only red.jpg')
-#keepOnlyOne(img, GREEN).save('only green.jpg')
-#keepOnlyOne(img, BLUE).save('only blue.jpg')
+# keepOnlyOne(img, RED).save('only red.jpg')
+# keepOnlyOne(img, GREEN).save('only green.jpg')
+# keepOnlyOne(img, BLUE).save('only blue.jpg')
 
-#greyScale(img).save('grey.jpg')
+greyScale(img).save('grey.jpg')
 
 # negate(img).save('negated.jpg')
 
