@@ -1,3 +1,4 @@
+from tkinter import READABLE
 import numpy as np
 from PIL import Image
 import math
@@ -84,7 +85,16 @@ def remove(image, color):
 	
 #Returns a new image that has only one color (RED, GREEN, or BLUE given using the constants at the top of the file) while the other two are removed by setting their values to 0.
 def keepOnlyOne(image, color):
-    arr = np.array()
+	arr = np.array(image)
+	for row in range(arr.shape[0]):
+		for col in range(arr.shape[1]):
+			if color != RED:
+				arr[row][col][RED] = 0
+			if color != GREEN:
+				arr[row][col][GREEN] = 0
+			if color != BLUE:
+				arr[row][col][BLUE] = 0
+	image = Image.fromarray(arr)
 	return image
 
 #Returns a new image that is the greyscale version of image.
@@ -133,15 +143,15 @@ img = Image.open('baby murloc.jpg')
 img2 = Image.open('green screen image.jpg')
 img3 = Image.open('thumbs up.png')
 
-remove(img, RED).save('no red.jpg')
+# remove(img, RED).save('no red.jpg')
 # remove(img, GREEN).save('no green.jpg')
 # remove(img, BLUE).save('no blue.jpg')
 
-# keepOnlyOne(img, RED).save('only red.jpg')
-# keepOnlyOne(img, GREEN).save('only green.jpg')
-# keepOnlyOne(img, BLUE).save('only blue.jpg')
+#keepOnlyOne(img, RED).save('only red.jpg')
+#keepOnlyOne(img, GREEN).save('only green.jpg')
+#keepOnlyOne(img, BLUE).save('only blue.jpg')
 
-# greyScale(img).save('grey.jpg')
+#greyScale(img).save('grey.jpg')
 
 # negate(img).save('negated.jpg')
 
