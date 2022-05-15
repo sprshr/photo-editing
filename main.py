@@ -77,8 +77,8 @@ def shrink(image):
 #Returns a new image that has all of a color (RED, GREEN, or BLUE given using the constants at the top of the file) removed by setting the value to 0.
 def remove(image, color):
     arr = np.array(image)
-    for row in range(arr.shape[0]):
-        for col in range(arr.shape[1]):
+    for row in range(arr.shape[NUM_ROWS]):
+        for col in range(arr.shape[NUM_COLS]):
             arr[row][col][color] = 0
     image = Image.fromarray(arr)
     return image
@@ -86,8 +86,8 @@ def remove(image, color):
 #Returns a new image that has only one color (RED, GREEN, or BLUE given using the constants at the top of the file) while the other two are removed by setting their values to 0.
 def keepOnlyOne(image, color):
 	arr = np.array(image)
-	for row in range(arr.shape[0]):
-		for col in range(arr.shape[1]):
+	for row in range(arr.shape[NUM_ROWS]):
+		for col in range(arr.shape[NUM_COLS]):
 			if color != RED:
 				arr[row][col][RED] = 0
 			if color != GREEN:
@@ -100,8 +100,8 @@ def keepOnlyOne(image, color):
 #Returns a new image that is the greyscale version of image.
 def greyScale(image):
 	arr = np.array(image)
-	for row in range(arr.shape[0]):
-		for col in range(arr.shape[1]):
+	for row in range(arr.shape[NUM_ROWS]):
+		for col in range(arr.shape[NUM_COLS]):
 			r,g,b = arr[row][col]
 			avg = r * 0.2126 + g * 0.7152 + b * 0.0722
 			avg = int(avg)
@@ -111,12 +111,17 @@ def greyScale(image):
 
 #Returns a new image that is the negative version of image (all values are subtracted from 255 so that light becomes dark, red becomes cyan, etc.).
 def negate(image):
+	arr = np.array(image)
+	for row in range(arr.shape[NUM_ROWS]):
+		for col in range(arr.shape[NUM_COLS]):
+			r,g,b = arr[row][col]
+			arr[row][col] = [255-r, 255-g, 255-b]
+			image = Image.fromarray(arr)
 	return image
 	
 #Returns a new image that reflects the top half of image onto the bottom half.
 def reflectTopToBot(image):
 	return image
-
 #Returns a new image that reflects the right half of the image onto the left half.
 def reflectRightToLeft(image):
 	return image
@@ -159,7 +164,7 @@ img3 = Image.open('thumbs up.png')
 # keepOnlyOne(img, GREEN).save('only green.jpg')
 # keepOnlyOne(img, BLUE).save('only blue.jpg')
 
-greyScale(img).save('grey.jpg')
+# greyScale(img).save('grey.jpg')
 
 # negate(img).save('negated.jpg')
 
