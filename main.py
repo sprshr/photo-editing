@@ -151,7 +151,10 @@ def flipHorizontal(image):
 
 #Returns a new image that flips image along the top or bottom. Everything should look upside down.
 def flipVertical(image):
-	return image
+    arr = np.array(image)
+    arr = arr[::-1]
+    image = Image.fromarray(arr)
+    return image
 
 #Returns a new image that has sticker (a smaller picture) placed on top of image with the upper left corner at x and y.
 def addSticker(image, sticker, x, y):
