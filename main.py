@@ -131,7 +131,15 @@ def reflectTopToBot(image):
     return image
 #Returns a new image that reflects the right half of the image onto the left half.
 def reflectRightToLeft(image):
-	return image
+    arr = np.array(image)
+    midLine = arr.shape[NUM_COLS] // 2
+    for row in range(arr.shape[NUM_ROWS]):
+        n = 0
+        for col in range(midLine-1):
+            n += 1
+            arr[row][midLine - n] = arr[row][midLine + n]
+    image = Image.fromarray(arr)
+    return image
 
 #Returns a new image that flips image along the left or right side. Everything should look backwards (text can help check this).
 def flipHorizontal(image):
@@ -175,9 +183,9 @@ img3 = Image.open('thumbs up.png')
 
 # negate(img).save('negated.jpg')
 
-reflectTopToBot(img).save('top to bot.jpg')
+# reflectTopToBot(img).save('top to bot.jpg')
 
-# reflectRightToLeft(img).save('right to left.jpg')
+reflectRightToLeft(img).save('right to left.jpg')
 
 # flipHorizontal(img).save('flip horizontal.jpg')
 
