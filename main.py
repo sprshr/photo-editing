@@ -121,7 +121,14 @@ def negate(image):
 	
 #Returns a new image that reflects the top half of image onto the bottom half.
 def reflectTopToBot(image):
-	return image
+    arr = np.array(image)
+    midLine = arr.shape[NUM_ROWS] // 2
+    n = 0
+    for row in range(midLine):
+        n += 1
+        arr[midLine + n] = arr[midLine - n]
+    image = Image.fromarray(arr)
+    return image
 #Returns a new image that reflects the right half of the image onto the left half.
 def reflectRightToLeft(image):
 	return image
@@ -168,7 +175,7 @@ img3 = Image.open('thumbs up.png')
 
 # negate(img).save('negated.jpg')
 
-# reflectTopToBot(img).save('top to bot.jpg')
+reflectTopToBot(img).save('top to bot.jpg')
 
 # reflectRightToLeft(img).save('right to left.jpg')
 
