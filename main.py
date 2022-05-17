@@ -158,8 +158,18 @@ def flipVertical(image):
 
 #Returns a new image that has sticker (a smaller picture) placed on top of image with the upper left corner at x and y.
 def addSticker(image, sticker, x, y):
-	return image
-
+    # if not sticker.filename.endswith(".png"):
+    arr = np.array(image)
+    stickerArr = np.array(sticker)
+    stickerHeight = stickerArr.shape[NUM_ROWS]
+    stickerWidth = stickerArr.shape[NUM_COLS]
+    for row in range(stickerHeight):
+        for col in range(stickerWidth):
+            if stickerArr[row][col][3] >= 155:   
+                for pixel in range(3):
+                    arr[y + row][x + col][pixel] = stickerArr[row][col][pixel]
+    image = Image.fromarray(arr)
+    return image
 #Returns a new image that is a black and white file that vaguely shows the outline of objects in image by using a given color distance threshold (dist). Hint: check the pixel below and the pixel to the right of the current pixel. If either is different enough, then it is probably an edge.
 def edgesOnly(image, dist):
 	return image
