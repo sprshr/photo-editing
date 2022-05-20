@@ -172,11 +172,36 @@ def addSticker(image, sticker, x, y):
     return image
 #Returns a new image that is a black and white file that vaguely shows the outline of objects in image by using a given color distance threshold (dist). Hint: check the pixel below and the pixel to the right of the current pixel. If either is different enough, then it is probably an edge.
 def edgesOnly(image, dist):
-	return image
+    arr = np.array(image)
+    longDist = []
+    for row in range(arr.shape[NUM_ROWS]):
+        for col in range(arr.shape[NUM_COLS]):
+            pixel = arr[row][col]
+            if row < arr.shape[NUM_ROWS]-1:
+                pixelBelow = arr[row+1][col]
+                distBelow = ((pixel[RED] - pixelBelow[RED])**2 + (pixel[GREEN] - pixelBelow[GREEN])**2 + (pixel[BLUE] - pixelBelow[BLUE])**2) ** 0.5
+                if distBelow <= dist:
+                    longDist.append([row,col])
+            if col < arr.shape[NUM_COLS]-1:
+                pixelRight = arr[row][col+1]
+                distRight = ((pixel[RED] - pixelRight[RED])**2 + (pixel[GREEN] - pixelRight[GREEN])**2 + (pixel[BLUE] - pixelRight[BLUE])**2) ** 0.5
+                if distRight <= dist:
+                    longDist.append([row,col])
+            #Turns the image to fully black
+            arr[row][col] = [0,0,0]
+    #Marks the white pixels
+    for pixel in longDist:
+        row = pixel[NUM_ROWS]
+        col = pixel[NUM_COLS]
+        arr[row][col] = [255,255,255]
+    image = Image.fromarray(arr)
+    return image
+	
 
 #Returns a new image that has the solid background color (key) of front_image replaced by the corresponding pixels from back_image with the given color distance threshold (dist).
 def chromaKey(front_image, back_image, key, dist):
-	return image
+	#return image
+    pass
 
 #Returns a new image that does whatever you want to image. The more creative the better.
 #Customize the header as needed
