@@ -200,8 +200,16 @@ def edgesOnly(image, dist):
 
 #Returns a new image that has the solid background color (key) of front_image replaced by the corresponding pixels from back_image with the given color distance threshold (dist).
 def chromaKey(front_image, back_image, key, dist):
-	#return image
-    pass
+    frontArr = np.array(front_image)
+    backArr = np.array(back_image)
+    for row in range(frontArr.shape[NUM_ROWS]):
+        for col in range(frontArr.shape[NUM_COLS]):
+            frontPixel = frontArr[row][col]
+            colorDist = ((frontPixel[RED] - key[RED])**2 + (frontPixel[GREEN] - key[GREEN])**2 + (frontPixel[BLUE] - key[BLUE])**2) ** 0.5
+            if colorDist <= dist:
+                frontArr[row][col] = backArr[row][col]
+    image = Image.fromarray(frontArr)
+    return image
 
 #Returns a new image that does whatever you want to image. The more creative the better.
 #Customize the header as needed
@@ -237,6 +245,6 @@ img3 = Image.open('thumbs up.png')
 
 # edgesOnly(img2, 20).save('edges only.jpg')
 
-# chromaKey(img2, img, [53,189,13], 100).save('chroma key.jpg')
+chromaKey(img2, img, [53,189,13], 100).save('chroma key.jpg')
 
 # finalFilter(img).save('final filter.jpg')
