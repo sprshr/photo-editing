@@ -1,4 +1,5 @@
 from tkinter import READABLE
+from matplotlib import image
 import numpy as np
 from PIL import Image
 import math
@@ -207,8 +208,6 @@ def edgesOnly(image, dist):
     image = Image.fromarray(arr)
     return image
 
-	
-
 #Returns a new image that has the solid background color (key) of front_image replaced by the corresponding pixels from back_image with the given color distance threshold (dist).
 def chromaKey(front_image, back_image, key, dist):
     frontArr = np.array(front_image)
@@ -226,6 +225,27 @@ def chromaKey(front_image, back_image, key, dist):
 #Customize the header as needed
 # removes the color(s) that are passed into the function
 def circleCut(image, radius):
+    arr = np.array(image)
+    arr = np.insert(arr, 3, 255, axis=2)
+    centerY = arr.shape[NUM_ROWS]//2
+    centerX = arr.shape[NUM_COLS]//2
+    for row in range(arr.shape[NUM_ROWS]):
+        r2 = pow(radius, 2)
+        r2 = r2 - (row-centerY)**2
+        try:
+            r = math.sqrt(r2)
+        except ValueError:
+            for col in range(arr.shape[NUM_COLS]):
+                arr[row][col][3] = 0
+            continue
+        else:
+            r = int(r)
+            maxX = centerX + r
+            minX = centerX - r
+            for col in range(arr.shape[NUM_COLS]):
+                if col < minX or col > maxX:
+                    arr[row][col][3] = 0
+    image = Image.fromarray(arr)
     return image
 #use/modify this code to test your functions:
 img = Image.open('baby murloc.jpg')
@@ -242,6 +262,7 @@ img3 = Image.open('thumbs up.png')
 
 # greyScale(img).save('grey.jpg')
 
+# This one takes a little long to run
 # negate(img).save('negated.jpg')
 
 # reflectTopToBot(img).save('top to bot.jpg')
@@ -258,4 +279,4 @@ img3 = Image.open('thumbs up.png')
 
 # chromaKey(img2, img, [53,189,13], 100).save('chroma key.jpg')
 
-# circleCut(img, 2).save('final filter.jpg')
+# circleCut(img, 350).save('circle cut.png')
