@@ -2,7 +2,6 @@ from tkinter import READABLE
 import numpy as np
 from PIL import Image
 import math
-
 #Color indicies (colors are tuples in the form: [ red, green, blue])
 RED = 0
 GREEN = 1
@@ -171,31 +170,43 @@ def addSticker(image, sticker, x, y):
     image = Image.fromarray(arr)
     return image
 #Returns a new image that is a black and white file that vaguely shows the outline of objects in image by using a given color distance threshold (dist). Hint: check the pixel below and the pixel to the right of the current pixel. If either is different enough, then it is probably an edge.
+#I finally got it working at my history class!
 def edgesOnly(image, dist):
     arr = np.array(image)
-    longDist = []
+    isHighDist = lambda x: x >= dist
     for row in range(arr.shape[NUM_ROWS]):
         for col in range(arr.shape[NUM_COLS]):
             pixel = arr[row][col]
-            if row < arr.shape[NUM_ROWS]-1:
-                pixelBelow = arr[row+1][col]
-                distBelow = ((pixel[RED] - pixelBelow[RED])**2 + (pixel[GREEN] - pixelBelow[GREEN])**2 + (pixel[BLUE] - pixelBelow[BLUE])**2) ** 0.5
-                if distBelow <= dist:
-                    longDist.append([row,col])
-            if col < arr.shape[NUM_COLS]-1:
-                pixelRight = arr[row][col+1]
-                distRight = ((pixel[RED] - pixelRight[RED])**2 + (pixel[GREEN] - pixelRight[GREEN])**2 + (pixel[BLUE] - pixelRight[BLUE])**2) ** 0.5
-                if distRight <= dist:
-                    longDist.append([row,col])
-            #Turns the image to fully black
-            arr[row][col] = [0,0,0]
-    #Marks the white pixels
-    for pixel in longDist:
-        row = pixel[NUM_ROWS]
-        col = pixel[NUM_COLS]
-        arr[row][col] = [255,255,255]
+            while True:
+                if row < arr.shape[NUM_ROWS]-1:
+                    pixelBelow = arr[row+1][col]
+                    distBelow = getColorDistance(pixel, pixelBelow)
+                    if isHighDist(distBelow):
+                        arr[row][col] = [0,0,0]
+                        break
+                if col < arr.shape[NUM_COLS]-1:
+                    pixelRight = arr[row][col+1]
+                    distRight = getColorDistance(pixel, pixelRight)
+                    if isHighDist(distRight):
+                        arr[row][col] = [0,0,0]
+                        break
+                if row < arr.shape[NUM_ROWS]-1 and col != 0:
+                    pixelBelowLeft = arr[row+1][col-1]
+                    distBelowLeft = getColorDistance(pixel, pixelBelowLeft)
+                    if isHighDist(distBelowLeft): 
+                        arr[row][col] = [0,0,0]
+                        break
+                if row < arr.shape[NUM_ROWS]-1 and col < arr.shape[NUM_COLS]-1:
+                    pixelBelowRight = arr[row+1][col+1]
+                    distBelowRight = getColorDistance(pixel, pixelBelowRight)
+                    if isHighDist(distBelowRight): 
+                        arr[row][col] = [0,0,0]
+                        break
+                arr[row][col] = [255,255,255]
+                break
     image = Image.fromarray(arr)
     return image
+
 	
 
 #Returns a new image that has the solid background color (key) of front_image replaced by the corresponding pixels from back_image with the given color distance threshold (dist).
@@ -205,7 +216,7 @@ def chromaKey(front_image, back_image, key, dist):
     for row in range(frontArr.shape[NUM_ROWS]):
         for col in range(frontArr.shape[NUM_COLS]):
             frontPixel = frontArr[row][col]
-            colorDist = ((frontPixel[RED] - key[RED])**2 + (frontPixel[GREEN] - key[GREEN])**2 + (frontPixel[BLUE] - key[BLUE])**2) ** 0.5
+            colorDist = getColorDistance(frontPixel, key)
             if colorDist <= dist:
                 frontArr[row][col] = backArr[row][col]
     image = Image.fromarray(frontArr)
@@ -213,9 +224,9 @@ def chromaKey(front_image, back_image, key, dist):
 
 #Returns a new image that does whatever you want to image. The more creative the better.
 #Customize the header as needed
-def finalFilter(image):
-	return image
-	
+# removes the color(s) that are passed into the function
+def circleCut(image, radius):
+    return image
 #use/modify this code to test your functions:
 img = Image.open('baby murloc.jpg')
 img2 = Image.open('green screen image.jpg')
@@ -245,6 +256,6 @@ img3 = Image.open('thumbs up.png')
 
 # edgesOnly(img2, 20).save('edges only.jpg')
 
-chromaKey(img2, img, [53,189,13], 100).save('chroma key.jpg')
+# chromaKey(img2, img, [53,189,13], 100).save('chroma key.jpg')
 
-# finalFilter(img).save('final filter.jpg')
+# circleCut(img, 2).save('final filter.jpg')
