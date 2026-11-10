@@ -14,9 +14,9 @@ NUM_COLS = 1
 def getColorDistance(c1, c2):
 	r1, g1, b1 = c1
 	r2, g2, b2 = c2
-	rv = (0 + r2 - r1) ** 2
-	gv = (0 + g2 - g1) ** 2
-	bv = (0 + b2 - b1) ** 2
+	rv = (int(r2) - int(r1)) ** 2
+	gv = (int(g2) - int(g1)) ** 2
+	bv = (int(b2) - int(b1)) ** 2
 	return math.sqrt(rv + gv + bv)
 
 #Returns a new image that sets color to have value for the entire image
@@ -64,9 +64,9 @@ def shrink(image):
 			r2, g2, b2 = old_arr[2 * row][2 * col + 1]
 			r3, g3, b3 = old_arr[2 * row + 1][2 * col]
 			r4, g4, b4 = old_arr[2 * row + 1][2 * col + 1]
-			r = (0 + r1 + r2 + r3 + r4) // 4
-			g = (0 + g1 + g2 + g3 + g4) // 4
-			b = (0 + b1 + b2 + b3 + b4) // 4
+			r = (int(r1) + int(r2) + int(r3) + int(r4)) // 4
+			g = (int(g1) + int(g2) + int(g3) + int(g4)) // 4
+			b = (int(b1) + int(b2) + int(b3) + int(b4)) // 4
 			arr[row][col] = [r,g,b]
 	return Image.fromarray(arr)
 
